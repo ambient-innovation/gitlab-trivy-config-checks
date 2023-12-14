@@ -22,7 +22,7 @@ config_scanning:
   allow_failure: true
   script:
     # Report results to json file
-    - trivy config --exit-code 0 --format template --template "@contrib/gitlab-codequality.tpl" -o $FILENAME $DIRECTORY >/dev/null 2>&1 || true
+    - trivy config --exit-code 0 --format template --template "@config-checks.tpl" -o $FILENAME $DIRECTORY >/dev/null 2>&1 || true
     # Report results as table
     - trivy config --exit-code 1 --format table $DIRECTORY || FILE_CODE=$?
   cache:
