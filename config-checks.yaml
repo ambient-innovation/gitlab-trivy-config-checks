@@ -25,7 +25,7 @@ config_scanning:
     # Report results to json file
     - trivy config --exit-code 0 --format template --template "@{TRIVY_CACHE_DIR}config-checks.tpl" -o $FILENAME $DIRECTORY >/dev/null 2>&1 || true
     # Report results as table
-    - trivy config --exit-code 1 --format table $DIRECTORY || FILE_CODE=$?
+    - trivy config --exit-code 1 --format table $DIRECTORY
   cache:
     paths:
       - .trivycache/
