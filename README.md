@@ -31,7 +31,7 @@ config_scanning:
 
 The example shown here will overwrite the `config_scanning` job from the template and tell it to
 
-a) scan an image as specified in the `CONFIG_PATH` variable,\
+a) scan a directory as specified in the `DIRECTORY` variable,\
 b) perform a simple config scan\
 c) only report errors with a level of MEDIUM,HIGH,CRITICAL or UNKNOWN.  
 
@@ -47,11 +47,11 @@ config_scanning:
 ```
 
 ## Advanced Settings  
-The container scanning job exposes a few more variables by which you can adjust the scanning if needed. The default settings are the recommendation of the TE-Circle, though.  
+The config scanning job exposes a few more variables by which you can adjust the scanning if needed. The default settings are the recommendation of the Secret Heroes, though.  
 
 ### Change minimum severity reported
 By adding a new variable called `SEVERITY` to your job, you can change which severity items should be reported. The default is to report UNKNOWN, MEDIUM, HIGH and CRITICAL config issues. The remaining options are: `LOW`
-Trivy requires a full list of severities to report. To report all severities from LOW and higher for example, you need to specify a comma-separated list like so: `SEVERITY: "LOW, MEDIUM,HIGH,CRITICAL,UNKNOWN"`
+Trivy requires a full list of severities to report. To report all severities from LOW and higher for example, you need to specify a comma-separated list like so: `SEVERITY: "LOW,MEDIUM,HIGH,CRITICAL,UNKNOWN"`
 
 We recommend only scanning for config issues with a MEDIUM or higher level.
 
@@ -63,7 +63,7 @@ will be "green" in GitLab. If you want to change this, just set the variable `EX
 
 Here's an example:
 ```yaml
-license_scanning:
+config_scanning:
   variables:
     EXIT_CODE_ON_FINDINGS: 1
 ```
@@ -72,4 +72,5 @@ license_scanning:
 By default trivy performs one run in full-silence mode writing the results to the gitlab codeclimate report file and then another one showing the results in a plaintext table. If the scan is taking very long, you can also show a progress bar during the scan by setting the `TRIVY_NO_PROGRESS` variable to `"false"`.  
 To make sure you're doing a fresh run and instruct trivy to download a fresh vulnerability database, you can turn off/move the cache directory via the `TRIVY_CACHE_DIR` variable. The default value for this variable is a directory called `.trivycache`
 
-You can add more variables corresponding to the CLI switches as documented on the trivy homepage: https://aquasecurity.github.io/trivy/latest/docs/references/customization/envs/
+You can add more variables corresponding to the CLI switches as [documented on the trivy homepage](https://aquasecurity.github.io/trivy/v0.48/docs/references/configuration/cli/trivy/)  
+NOTE: This link points to the reference as of v0.48 - December 2023, make sure to check the latest version for changes in newer versions.
