@@ -1,0 +1,34 @@
+container_scanning:
+  image: 
+    name: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/aquasec/trivy
+    entrypoint: [""]
+  tags:
+    - small-runner
+  stage: test
+  variables:
+    TRIVY_NO_PROGRESS: "true"
+    TRIVY_USERNAME: "$CI_REGISTRY_USER"
+    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+    TRIVY_AUTH_URL: "$CI_REGISTRY"
+    SEVERITY: "MEDIUM,HIGH,CRITICAL,UNKNOWN"
+    TRIVY_SEVERITY: "$SEVERITY"    
+    TRIVY_CACHE_DIR: ".trivycache/"
+    # Set to "backend" and "frontend" in the respective jobs in mono-repos.
+    DIRECTORY: "./"
+    # Is like that for backward-compatibility, previously we only had DIRECTORY.
+    FILENAME: "gl-codeclimate-$CI_JOB_NAME_SLUG.json"
+  before_script:
+    - if [ ! -e ${TRIVY_CACHE_DIR} ]; then mkdir -p ${TRIVY_CACHE_DIR}; fi
+  allow_failure: true
+  script:
+    # Report results to json file
+    - trivy config --exit-code 0 --format template --template "@contrib/gitlab-codequality.tpl" -o $FILENAME $DIRECTORY >/dev/null 2>&1 || true
+    # Report results as table
+    - trivy config --exit-code 1 --format table $DIRECTORY || FILE_CODE=$?
+  cache:
+    paths:
+      - .trivycache/
+  artifacts:
+    paths:
+      - $FILENAME
+    when: always
