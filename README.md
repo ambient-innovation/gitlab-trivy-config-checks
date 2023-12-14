@@ -26,7 +26,7 @@ Last but not least you need a job within that test stage going by the name `conf
 ```yaml
 config_scanning:
   variables:
-    CONFIG_PATH: "charts/workshop"
+    DIRECTORY: "charts/workshop"
 ```
 
 The example shown here will overwrite the `config_scanning` job from the template and tell it to
