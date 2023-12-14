@@ -1,0 +1,8 @@
+# Whitelist
+!images/*
+!LICENSE
+!README.md
+!config-checks.yaml
+
+# Exclude everything else
+*
