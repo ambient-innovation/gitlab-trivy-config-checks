@@ -7,9 +7,6 @@ config_scanning:
   stage: test
   variables:
     TRIVY_NO_PROGRESS: "true"
-    TRIVY_USERNAME: "$CI_REGISTRY_USER"
-    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
-    TRIVY_AUTH_URL: "$CI_REGISTRY"
     SEVERITY: "MEDIUM,HIGH,CRITICAL,UNKNOWN"
     TRIVY_SEVERITY: "$SEVERITY"    
     TRIVY_CACHE_DIR: ".trivycache/"
