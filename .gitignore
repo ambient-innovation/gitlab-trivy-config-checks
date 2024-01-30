@@ -3,6 +3,7 @@
 !LICENSE
 !README.md
 !config-checks.yaml
+!config-checks.template.yaml
 
 # Exclude everything else
 *
