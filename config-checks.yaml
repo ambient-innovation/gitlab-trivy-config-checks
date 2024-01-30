@@ -2,4 +2,11 @@ include:
   - remote: https://raw.githubusercontent.com/ambient-innovation/gitlab-trivy-config-checks/main/config-checks.template.yaml
 
 config_scanning:
-  extends: [ .config_scanning ]
+  allow_failure: !reference [ .config_scanning, allow_failure ]
+  artifacts: !reference [ .config_scanning, artifacts ]
+  cache: !reference [ .config_scanning, cache ]
+  image: !reference [ .config_scanning, image ]
+  script: !reference [ .config_scanning, script ]
+  stage: !reference [ .config_scanning, stage ]
+  tags: !reference [ .config_scanning, tags ]
+  variables: !reference [ .config_scanning, variables ]
