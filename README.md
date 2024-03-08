@@ -75,6 +75,9 @@ backend:config scanning:
 ## Advanced Settings  
 The config scanning job exposes a few more variables by which you can adjust the scanning if needed. The default settings are the recommendation of the Secret Heroes, though.  
 
+### Use trivy ignore file
+Set TRIVY_IGNOREFILE_DIR to target trivyignore file as an environment variable to use ignore file. Example value: `.trivyignore.yaml`
+
 ### Change minimum severity reported
 By adding a new variable called `SEVERITY` to your job, you can change which severity items should be reported. The default is to report UNKNOWN, MEDIUM, HIGH and CRITICAL config issues. The remaining options are: `LOW`
 Trivy requires a full list of severities to report. To report all severities from LOW and higher for example, you need to specify a comma-separated list like so: `SEVERITY: "LOW,MEDIUM,HIGH,CRITICAL,UNKNOWN"`
