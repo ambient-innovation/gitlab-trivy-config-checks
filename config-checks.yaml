@@ -18,22 +18,16 @@ config_scanning:
     # Is like that for backward-compatibility, previously we only had DIRECTORY.
     FILENAME: "gl-codeclimate-$CI_JOB_NAME_SLUG.json"
     EXIT_CODE_ON_FINDINGS: 1
+    TRIVY_IGNOREFILE_DIR: ".trivyignore.yaml"
   before_script:
     - if [ ! -e ${TRIVY_CACHE_DIR} ]; then mkdir -p ${TRIVY_CACHE_DIR}; fi
     - if [ ! -e ${TRIVY_CACHE_DIR}config-checks.tpl ]; then  wget --no-verbose https://raw.githubusercontent.com/ambient-innovation/gitlab-trivy-config-checks/main/config-checks.tpl -O ${TRIVY_CACHE_DIR}config-checks.tpl; fi
   allow_failure: true
   script:
-    # TRIVY_IGNOREFILE_DIR is not set, do not use it.
-    ## # Report results to json file
-    - if [ -z "${TRIVY_IGNOREFILE_DIR}" ]; then trivy config --exit-code 0 --format template --template "@{TRIVY_CACHE_DIR}config-checks.tpl" -o ${FILENAME} ${DIRECTORY} >/dev/null 2>&1 || true; fi
-    ## Report results as table
-    - if [ -z "${TRIVY_IGNOREFILE_DIR}" ]; then trivy config --exit-code ${EXIT_CODE_ON_FINDINGS} --format table ${DIRECTORY}; fi
-
-    # TRIVY_IGNOREFILE_DIR is set, use it.
     ## Report results to json file
-    - if [ ! -z "${TRIVY_IGNOREFILE_DIR}" ]; then trivy config --ignorefile ${TRIVY_IGNOREFILE_DIR} --exit-code 0 --format template --template "@{TRIVY_CACHE_DIR}config-checks.tpl" -o ${FILENAME} ${DIRECTORY} >/dev/null 2>&1 || true; fi
+    - trivy config --ignorefile ${TRIVY_IGNOREFILE_DIR} --exit-code 0 --format template --template "@{TRIVY_CACHE_DIR}config-checks.tpl" -o ${FILENAME} ${DIRECTORY} >/dev/null 2>&1 || true
     ## Report results as table
-    - if [ ! -z "${TRIVY_IGNOREFILE_DIR}" ]; then trivy config --ignorefile ${TRIVY_IGNOREFILE_DIR} --exit-code ${EXIT_CODE_ON_FINDINGS} --format table ${DIRECTORY}; fi
+    - trivy config --ignorefile ${TRIVY_IGNOREFILE_DIR} --exit-code ${EXIT_CODE_ON_FINDINGS} --format table ${DIRECTORY}
   cache:
     paths:
       - .trivycache/
