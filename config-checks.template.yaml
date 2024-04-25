@@ -19,12 +19,18 @@
   before_script:
     - if [ ! -e ${TRIVY_CACHE_DIR} ]; then mkdir -p ${TRIVY_CACHE_DIR}; fi
     - if [ ! -e ${TRIVY_CACHE_DIR}config-checks.tpl ]; then  wget --no-verbose https://raw.githubusercontent.com/ambient-innovation/gitlab-trivy-config-checks/main/config-checks.tpl -O ${TRIVY_CACHE_DIR}config-checks.tpl; fi
-  allow_failure: true
+  allow_failure: false
   script:
     # Report results to json file
     - trivy config --ignorefile ${TRIVY_IGNOREFILE_DIR} --exit-code 0 --format template --template "@{TRIVY_CACHE_DIR}config-checks.tpl" -o ${FILENAME} ${DIRECTORY} >/dev/null 2>&1 || true
     # Report results as table
     - trivy config --ignorefile ${TRIVY_IGNOREFILE_DIR} --exit-code ${EXIT_CODE_ON_FINDINGS} --format table ${DIRECTORY}
+    # Fail if 0 config files are found in folder. Such case happens when there is any error in your helm chart.
+    - >
+      if trivy config charts --ignorefile ${TRIVY_IGNOREFILE_DIR} 2>&1 | grep -q 'Detected config files: 0'; then
+        echo "Detected 0 config files. Something is wrong. Check your helm chart or other config files for possible errors. Running trivy with --debug option should help as well."
+        exit 1
+      fi
   cache:
     paths:
       - .trivycache/
