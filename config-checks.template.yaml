@@ -20,7 +20,8 @@
     - if [ ! -e ${TRIVY_CACHE_DIR} ]; then mkdir -p ${TRIVY_CACHE_DIR}; fi
     - if [ ! -e ${TRIVY_CACHE_DIR}config-checks.tpl ]; then  wget --no-verbose https://raw.githubusercontent.com/ambient-innovation/gitlab-trivy-config-checks/main/config-checks.tpl -O ${TRIVY_CACHE_DIR}config-checks.tpl; fi
     # Create trivyignore.yaml if it doesn't exist yet
-    - if [ ! -e ${TRIVY_IGNOREFILE_DIR} ]; then echo "ambient_trivyignore_placeholder: None" > ${TRIVY_IGNOREFILE_DIR}; fi
+    - |
+    if [ ! -e ${TRIVY_IGNOREFILE_DIR} ]; then echo "ambient_trivyignore_placeholder: None" > ${TRIVY_IGNOREFILE_DIR}; fi
   allow_failure: false
   script:
     # Report results to json file
